@@ -20,14 +20,14 @@ Follow the [instructions](https://cert-manager.io/docs/installation/) using the 
 #### Using public helm chart
 
 ```bash
-helm repo add cert-manager-webhook-oci https://dn13.gitlab.io/cert-manager-webhook-oci
-helm install --namespace cert-manager cert-manager-webhook-oci cert-manager-webhook-oci/cert-manager-webhook-oci
+helm repo add highcanfly https://helm-repo.highcanfly.club/
+helm install --namespace kube-certmanager cert-manager-webhook-oci highcanfly/cert-manager-webhook-oci
 ```
 
 #### From local checkout
 
 ```bash
-helm install --namespace cert-manager cert-manager-webhook-oci deploy/cert-manager-webhook-oci
+helm install --namespace kube-certmanager cert-manager-webhook-oci deploy/cert-manager-webhook-oci
 ```
 
 **Note**: The kubernetes resources used to install the Webhook should be deployed within the same namespace as the cert-manager.
