@@ -6,7 +6,7 @@ IMAGE_TAG := "latest"
 
 OUT := $(shell pwd)/deploy
 
-KUBE_VERSION=1.24.2
+KUBE_VERSION=1.27.0
 
 $(shell mkdir -p "$(OUT)")
 export TEST_ASSET_ETCD=.test/kubebuilder/bin/etcd
