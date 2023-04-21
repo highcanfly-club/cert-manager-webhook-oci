@@ -1,4 +1,4 @@
-module github.com/highcanfly/cert-manager-webhook-oci
+module gitlab.com/dn13/cert-manager-webhook-oci
 
 go 1.17
 

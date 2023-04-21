@@ -4,14 +4,14 @@
 # solve the DNS01 challenge.
 # This group name should be **unique**, hence using your own company's domain
 # here is recommended.
-groupName: acme.oci.webhook
+groupName: acme.d-n.be
 
 certManager:
-  namespace: kube-certmanager
+  namespace: cert-manager
   serviceAccountName: cert-manager
 
 image:
-  repository: highcanfly/cert-manager-webhook-oci
+  repository: registry.gitlab.com/dn13/cert-manager-webhook-oci
   tag: ""
   pullPolicy: ""
 

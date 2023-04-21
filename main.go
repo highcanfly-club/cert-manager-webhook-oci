@@ -84,10 +84,7 @@ type ociDNSProviderConfig struct {
 // within a single webhook deployment**.
 // For example, `cloudflare` may be used as the name of a solver.
 func (c *ociDNSProviderSolver) Name() string {
-	return "ocidns"
-}
-func (c *ociDNSProviderSolver) SingularNameProvider() string {
-	return "ocidns"
+	return "oci"
 }
 
 // Present is responsible for actually presenting the DNS record with the
@@ -149,9 +146,10 @@ func patchRequest(ch *v1alpha1.ChallengeRequest, operation dns.RecordOperationOp
 
 	return dns.PatchZoneRecordsRequest{
 		ZoneNameOrId: &ch.ResolvedZone,
+
 		PatchZoneRecordsDetails: dns.PatchZoneRecordsDetails{
 			Items: []dns.RecordOperation{
-				{
+				dns.RecordOperation{
 					Domain:    &domain,
 					Rtype:     &rtype,
 					Rdata:     &ch.Key,
@@ -195,6 +193,7 @@ func loadConfig(cfgJSON *extapi.JSON) (ociDNSProviderConfig, error) {
 	if err := json.Unmarshal(cfgJSON.Raw, &cfg); err != nil {
 		return cfg, fmt.Errorf("error decoding solver config: %v", err)
 	}
+
 	return cfg, nil
 }
 
@@ -203,6 +202,7 @@ func (c *ociDNSProviderSolver) ociDNSClient(cfg *ociDNSProviderConfig, namespace
 	var err2 error
 	var configProvider common.ConfigurationProvider
 	secretName := cfg.OCIProfileSecretRef
+
 	klog.V(3).InfoS("Trying to load oci profile from secret", "secret", secretName, "namespace", namespace)
 	sec, err := c.client.CoreV1().Secrets(namespace).Get(context.Background(), secretName, metav1.GetOptions{})
 	if err != nil {
@@ -215,22 +215,16 @@ func (c *ociDNSProviderSolver) ociDNSClient(cfg *ociDNSProviderConfig, namespace
 		tenancy, err := stringFromSecretData(&sec.Data, "tenancy")
 		if err != nil {
 			return nil, fmt.Errorf("unable to get tenancy from secret `%s/%s`; %v", secretName, namespace, err)
-		} else {
-			klog.V(2).Info("Tenancy: %s\n", tenancy)
 		}
 
 		user, err := stringFromSecretData(&sec.Data, "user")
 		if err != nil {
 			return nil, fmt.Errorf("unable to get user from secret `%s/%s`; %v", secretName, namespace, err)
-		} else {
-			klog.V(2).Info("User: %s\n", user)
 		}
 
 		region, err := stringFromSecretData(&sec.Data, "region")
 		if err != nil {
 			return nil, fmt.Errorf("unable to get region from secret `%s/%s`; %v", secretName, namespace, err)
-		} else {
-			klog.V(2).Info("Region: %s\n", region)
 		}
 
 		fingerprint, err := stringFromSecretData(&sec.Data, "fingerprint")
@@ -241,8 +235,6 @@ func (c *ociDNSProviderSolver) ociDNSClient(cfg *ociDNSProviderConfig, namespace
 		privateKey, err := stringFromSecretData(&sec.Data, "privateKey")
 		if err != nil {
 			return nil, fmt.Errorf("unable to get privateKey from secret `%s/%s`; %v", secretName, namespace, err)
-		} else {
-			// klog.V(3).Info("Private key: \n%s\n", privateKey)
 		}
 
 		privateKeyPassphrase, err := stringFromSecretData(&sec.Data, "privateKeyPassphrase")
