@@ -38,6 +38,9 @@ Follow the [instructions](https://cert-manager.io/docs/installation/) using the 
 
 *Must be installed in the same namespace as cert-manager. I use kube-certmanager, if you use another add --set certManager.namespace=your_certmanager_namespace* 
 ```bash
+# there is only x86_64 and arm64 images
+helm repo add highcanfly https://helm-repo.highcanfly.club/
+helm repo update
 helm install --namespace kube-certmanager cert-manager-webhook-oci highcanfly/cert-manager-webhook-oci
 ```
 **Note**: The kubernetes resources used to install the Webhook should be deployed within the same namespace as the cert-manager.
